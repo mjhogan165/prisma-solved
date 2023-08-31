@@ -60,7 +60,7 @@ describe("p4", () => {
       await getAllMoviesWithAverageScoreOverN(4),
       sortBy((movie) => movie.id)
     );
-
+    console.log({ expected: expected });
     expect(actual).toEqual(expected);
   });
 });

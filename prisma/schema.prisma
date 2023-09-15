@@ -20,11 +20,11 @@ model User {
 
 model StarRating {
   id      Int   @id @default(autoincrement())
-  score   Int // Should be 1 / 5
-  userId  Int
-  user    User  @relation(references: [id], fields: [userId])
-  movieId Int
-  movie   Movie @relation(references: [id], fields: [movieId])
+  score   Int 
+  userId  Int?
+  user    User?  @relation(references: [id], fields: [userId], onDelete: Cascade)
+  movieId Int?
+  movie   Movie? @relation(references: [id], fields: [movieId], onDelete: SetNull)
 }
 
 model Movie {
@@ -34,3 +34,4 @@ model Movie {
   starRatings    StarRating[]
   parentalRating String
 }
+

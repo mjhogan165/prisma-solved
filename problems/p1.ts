@@ -6,6 +6,5 @@ export const getAllUsers = async () => {
   const users = await prisma.user.findMany({
     orderBy: [{ username: "asc" }],
   });
-  console.log("donesky");
   return users;
 };

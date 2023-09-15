@@ -13,11 +13,4 @@ export const getNYoungestUsers = async (howManyUsersToGrab: number) => {
       return arr.slice(0, howManyUsersToGrab);
     });
   return youngest;
-
-  //   console.log({
-  //     youngest: youngest,
-  //     howManyUsersToGrab: howManyUsersToGrab,
-  //     users: users,
-  //   });
-  //   console.log({ slice: youngest.slice(1, users) });
 };

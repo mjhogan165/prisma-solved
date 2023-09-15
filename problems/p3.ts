@@ -8,6 +8,5 @@ export const getAverageUserAge = async () => {
       age: true,
     },
   });
-  console.log(avg._avg.age);
   return avg._avg.age;
 };

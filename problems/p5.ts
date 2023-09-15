@@ -2,9 +2,13 @@ import { forEach, groupBy, map, reduce, sumBy } from "remeda";
 import { prisma } from "./prisma";
 import { StarRating } from "@prisma/client";
 import { averageBy } from "../utils";
+import { Movie } from "@prisma/client";
 
 // hint:find all stars with the movies "included" on, then good ol' javascript should finish the job
 // This one should require more javascript work than the previous ones
+interface MoviesWithStars extends Movie {
+  starRatings?: StarRating[];
+}
 export const getAllMoviesWithAverageScoreOverN = async (n: number) => {
   const movies = await prisma.movie
     .findMany({
@@ -13,34 +17,23 @@ export const getAllMoviesWithAverageScoreOverN = async (n: number) => {
       },
     })
     .then((movies) => {
-      const arr = [];
-
-      // const findavg = (array) => {
-      //   let sum = 0;
-      //   for (let i = 0; i < array.length; i++) {
-      //     sum += array[i];
-      //   }
-      //   return sum / array.length;
-      // };
+      const arr: MoviesWithStars[] = [];
       for (const movie of movies) {
         const scores = [];
         for (const rating of movie.starRatings) {
           scores.push(rating.score);
         }
         const avg = averageBy(scores, (score) => score);
-        // const avg = findavg(scores);
-        console.log({ scores: scores, avg: avg });
         if (avg >= n) {
           arr.push(movie);
         }
       }
-      arr.forEach((movie: any) => {
+      arr.forEach((movie: MoviesWithStars) => {
         delete movie.starRatings;
       });
       return arr;
     })
     .then((arr) => {
-      console.log({ arr: arr });
       return arr;
     })
     .catch((err) => console.log(err));

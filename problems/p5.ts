@@ -10,32 +10,47 @@ interface MoviesWithStars extends Movie {
   starRatings?: StarRating[];
 }
 export const getAllMoviesWithAverageScoreOverN = async (n: number) => {
-  const movies = await prisma.movie
-    .findMany({
-      include: {
-        starRatings: true,
+  // const movies = await prisma.movie
+  //   .findMany({
+  //     include: {
+  //       starRatings: true,
+  //     },
+  //   })
+  //   .then((movies) => {
+  //     const arr: MoviesWithStars[] = [];
+  //     for (const movie of movies) {
+  //       const scores = [];
+  //       for (const rating of movie.starRatings) {
+  //         scores.push(rating.score);
+  //       }
+  //       const avg = averageBy(scores, (score) => score);
+  //       if (avg >= n) {
+  //         arr.push(movie);
+  //       }
+  //     }
+  //     arr.forEach((movie: MoviesWithStars) => {
+  //       delete movie.starRatings;
+  //     });
+  //     return arr;
+  //   })
+  //   .catch((err) => console.log(err));
+  // return movies;
+
+  const result = await prisma.starRating.groupBy({
+    by: ["movieId"],
+    having: {
+      score: {
+        _avg: {
+          gt: n,
+        },
       },
-    })
-    .then((movies) => {
-      const arr: MoviesWithStars[] = [];
-      for (const movie of movies) {
-        const scores = [];
-        for (const rating of movie.starRatings) {
-          scores.push(rating.score);
-        }
-        const avg = averageBy(scores, (score) => score);
-        if (avg >= n) {
-          arr.push(movie);
-        }
-      }
-      arr.forEach((movie: MoviesWithStars) => {
-        delete movie.starRatings;
-      });
-      return arr;
-    })
-    .then((arr) => {
-      return arr;
-    })
-    .catch((err) => console.log(err));
-  return movies;
+    },
+  });
+  return prisma.movie.findMany({
+    where: {
+      id: {
+        in: result.map((group) => group.movieId!),
+      },
+    },
+  });
 };

@@ -3,7 +3,7 @@ import { prisma } from "./prisma";
 
 // get All Pg-13 movies, ordered by release year descending
 export const getAllPG13Movies = async () => {
-  const movies = await prisma.movie.findMany({
+  return prisma.movie.findMany({
     where: { parentalRating: "PG-13" },
     orderBy: {
       releaseYear: "desc",
@@ -13,5 +13,4 @@ export const getAllPG13Movies = async () => {
       parentalRating: true,
     },
   });
-  return movies;
 };

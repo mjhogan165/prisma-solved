@@ -3,24 +3,13 @@ import { averageBy } from "../utils";
 // get average score for a user
 export const getAverageScoreForUser = async (userId: number) => {
   const avg = await prisma.user
-    .findUnique({
+    .findUniqueOrThrow({
       where: { id: userId },
       include: {
         starRatings: true,
       },
     })
-    .then((user) => {
-      if (user) {
-        const scores = user?.starRatings.map((x) => x.score);
-        const sum = scores.reduce((acc: number, curr: number) => {
-          return acc + curr;
-        });
-        const avg = sum / scores.length;
-        if (avg) {
-          return avg;
-        } else return 0;
-      } else return 0;
-    })
+    .then((user) => averageBy(user.starRatings, (rating) => rating.score))
     .catch((err) => err);
   return avg;
 };

@@ -3,7 +3,7 @@ import { clearDb } from "../seed-helpers";
 import { prisma } from "./prisma";
 import { createUserWithData } from "./p11";
 
-describe("p10", () => {
+describe("p11", () => {
   beforeEach(async () => {
     await clearDb();
   });
@@ -12,11 +12,18 @@ describe("p10", () => {
   });
 
   it("should create a user", async () => {
-    const user = await createUserWithData({
+    const userObj = {
       age: 2,
       username: "chillMcChillerton",
-    });
+    };
+
+    await createUserWithData(userObj);
+
     const usersAfterMutation = await prisma.user.findMany({});
-    expect(usersAfterMutation).toEqual([user]);
+
+    const userFromDb = usersAfterMutation[0];
+
+    expect(userFromDb.age).toBe(userObj.age);
+    expect(userFromDb.username).toBe(userObj.username);
   });
 });

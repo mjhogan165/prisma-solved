@@ -12,4 +12,5 @@ export const getAverageScoreForUser = async (userId: number) => {
     .then((user) => averageBy(user.starRatings, (rating) => rating.score))
     .catch((err) => err);
   return avg;
+  //rrrrrrrrr
 };

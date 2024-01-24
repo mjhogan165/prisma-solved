@@ -9,6 +9,5 @@ export const deleteAllUsersWithAgeUnderN = async (n: number) => {
       },
     },
   });
-
   return deleted;
 };
